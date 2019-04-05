@@ -10,51 +10,47 @@ Prototype Refactor
 
 
 //=== GameObject ===
-function GameObject(gameAttr) {
-    this.createdAt = gameAttr.createdAt;
-    this.name = gameAttr.name;
-    this.dimensions = gameAttr.dimensions; // (These represent the character's size in the video game)
-}
-GameObject.prototype.destroy = function() {
+class GameObject {
+    constructor(gameAttr) {
+        this.createdAt = gameAttr.createdAt;
+        this.name = gameAttr.name;
+        this.dimensions = gameAttr.dimensions; // (These represent the character's size in the video game)
+    }
+    destroy() {
         return `${this.name} was removed from the game.`;
-    } // prototype method that returns: `${this.name} was removed from the game.`
-
+    }
+}
 
 
 //=== CharacterStats ===
-function CharacterStats(stats) {
-    GameObject.call(this, stats);
-    this.healthPoints = stats.healthPoints;
-    this.points = stats.points;
-}
-CharacterStats.prototype = Object.create(GameObject.prototype);
+class CharacterStats extends GameObject {
+    constructor(stats) {
+        super(stats)
+        this.healthPoints = stats.healthPoints;
+        this.points = stats.points;
+    }
 
-CharacterStats.prototype.takeDamage = function() {
+    takeDamage() {
         return `${this.name} took damage.`;
-    } // prototype method -> returns the string '<object name> took damage.'
+    }
+}
+
 
 // === Humanoid (Having an appearance or character resembling that of a human.) ===
-function Humanoid(humanoid) {
-    CharacterStats.call(this, humanoid)
-    this.team = humanoid.team;
-    this.weapons = humanoid.weapons;
-    this.language = humanoid.language;
-}
-Humanoid.prototype = Object.create(CharacterStats.prototype);
-Humanoid.prototype.greet = function() {
+class Humanoid extends CharacterStats {
+    constructor(humanoid) {
+        super(humanoid)
+        this.team = humanoid.team;
+        this.weapons = humanoid.weapons;
+        this.language = humanoid.language;
+    }
+
+    greet() {
         return `${this.name} offers a greeting in ${this.language}.`;
-    } // prototype method -> returns the string '<object name> offers a greeting in <object language>.'
+    }
+}
 
 
-
-
-/*
- * Inheritance chain: GameObject -> CharacterStats -> Humanoid
- * Instances of Humanoid should have all of the same properties as CharacterStats and GameObject.
- * Instances of CharacterStats should have all of the same properties as GameObject.
- */
-
-// Test you work by un-commenting these 3 objects and the list of console logs below:
 
 
 const mage = new Humanoid({
